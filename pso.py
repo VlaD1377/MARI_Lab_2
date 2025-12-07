@@ -176,6 +176,13 @@ class PSO:
 
         ax.contourf(Xg, Yg, Z, levels=40)
         scatter = ax.scatter(x_vals[0], y_vals[0], c='red', s=25)
+        # Лінії руху для кожної частинки
+        lines = [
+            ax.plot([x_vals[0, i], x_vals[0, i]],
+                    [y_vals[0, i], y_vals[0, i]],
+                    color="blue", linewidth=0.7)[0]
+            for i in range(self.particles)
+        ]
 
         ax.set_xlim(self.min, self.max)
         ax.set_ylim(self.min, self.max)
@@ -187,9 +194,22 @@ class PSO:
         # Оновлення кадру
         def draw_frame(i, from_slider=False):
             frame_index[0] = i
+            # Оновлюємо точки
             scatter.set_offsets(np.c_[x_vals[i], y_vals[i]])
+            # Оновлюємо лінії (траєкторії)
+            if i > 0:
+                for p in range(self.particles):
+                    lines[p].set_data(
+                        [x_vals[i - 1, p], x_vals[i, p]],
+                        [y_vals[i - 1, p], y_vals[i, p]]
+                    )
+            else:
+                for p in range(self.particles):
+                    lines[p].set_data(
+                        [x_vals[0, p], x_vals[0, p]],
+                        [y_vals[0, p], y_vals[0, p]]
+                    )
             ax.set_title(f"Iteration {i + 1}/{frames}")
-
             if not from_slider:
                 slider.set_val(i)
 
