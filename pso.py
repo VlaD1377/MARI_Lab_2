@@ -47,12 +47,15 @@ class PSO:
             r = i // side
             c = i % side
             neighbors = []
-            for dr in (-1, 0, 1):
-                for dc in (-1, 0, 1):
-                    rr = r + dr
-                    cc = c + dc
-                    if 0 <= rr < side and 0 <= cc < side:
-                        neighbors.append(rr * side + cc)
+            neighbors.append(i)
+            if r - 1 >= 0:
+                neighbors.append((r - 1) * side + c)
+            if r + 1 < side:
+                neighbors.append((r + 1) * side + c)
+            if c - 1 >= 0:
+                neighbors.append(r * side + (c - 1))
+            if c + 1 < side:
+                neighbors.append(r * side + (c + 1))
             best = min(neighbors, key=lambda j: pbest_val[j])
             best_indices[i] = best
         return best_indices
